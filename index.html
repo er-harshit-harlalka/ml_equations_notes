@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML & DL Equations Reference</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --bg: #0d0f12;
+    --bg2: #13161b;
+    --bg3: #1a1e25;
+    --card: #1e232c;
+    --border: #2a303d;
+    --accent: #4f9eff;
+    --accent2: #7c5cfc;
+    --accent3: #00d4aa;
+    --accent4: #ff6b6b;
+    --accent5: #ffb347;
+    --text: #e8eaf0;
+    --muted: #8892a4;
+    --tag: #252c38;
+    --font-mono: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    --font-body: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  /* SIDEBAR */
+  nav {
+    width: 260px;
+    min-width: 260px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    padding: 0 0 2rem;
+  }
+  nav::-webkit-scrollbar { width: 4px; }
+  nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .nav-header {
+    padding: 1.25rem 1.25rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0;
+    background: var(--bg2);
+    z-index: 10;
+  }
+  .nav-header h1 { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .nav-header p { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .nav-group { margin-top: 0.75rem; }
+  .nav-group-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); padding: 0.5rem 1.25rem 0.25rem;
+  }
+  nav a {
+    display: block; padding: 0.3rem 1.25rem 0.3rem 1.5rem;
+    font-size: 12.5px; color: #a0aab8; text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  nav a:hover { color: var(--text); border-left-color: var(--accent); background: rgba(79,158,255,0.05); }
+  nav a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(79,158,255,0.08); }
+  /* MAIN */
+  main {
+    margin-left: 260px;
+    flex: 1;
+    padding: 2rem 2.5rem 4rem;
+    max-width: 960px;
+  }
+  .page-title {
+    font-size: 28px; font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 0.25rem;
+  }
+  .page-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 2.5rem; }
+  /* SECTION */
+  section { margin-bottom: 3rem; }
+  .section-divider {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin: 2.5rem 0 1.5rem;
+  }
+  .section-divider .tag {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 3px 10px; border-radius: 20px;
+    color: var(--accent); background: rgba(79,158,255,0.12); border: 1px solid rgba(79,158,255,0.25);
+  }
+  .section-divider hr { flex:1; border: none; border-top: 1px solid var(--border); }
+  h2 {
+    font-size: 20px; font-weight: 700; color: var(--text);
+    margin-bottom: 1rem; padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  h2 .icon { font-size: 16px; }
+  h3 { font-size: 15px; font-weight: 600; color: var(--accent3); margin: 1.25rem 0 0.6rem; }
+  h4 { font-size: 13px; font-weight: 600; color: var(--accent5); margin: 1rem 0 0.4rem; }
+  /* EQUATION CARD */
+  .eq-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin: 0.75rem 0;
+    position: relative;
+  }
+  .eq-card:hover { border-color: rgba(79,158,255,0.3); }
+  .eq-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--muted); margin-bottom: 0.6rem;
+  }
+  .eq-desc { font-size: 13px; color: var(--muted); margin-top: 0.6rem; }
+  /* GRID */
+  .eq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  @media(max-width:780px){ .eq-grid { grid-template-columns: 1fr; } }
+  /* NOTE BOX */
+  .note {
+    background: rgba(124,92,252,0.08);
+    border-left: 3px solid var(--accent2);
+    border-radius: 0 6px 6px 0;
+    padding: 0.75rem 1rem;
+    font-size: 13px; color: #c0b8f0;
+    margin: 0.75rem 0;
+  }
+  .warn {
+    background: rgba(255,179,71,0.08);
+    border-left: 3px solid var(--accent5);
+    border-radius: 0 6px 6px 0;
+    padding: 0.75rem 1rem;
+    font-size: 13px; color: #d4a869;
+    margin: 0.75rem 0;
+  }
+  /* SCROLLBAR */
+  main::-webkit-scrollbar { width: 6px; }
+  /* MathJax override */
+  mjx-container { overflow-x: auto; max-width: 100%; }
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="nav-header">
+    <h1>ML · DL Reference</h1>
+    <p>Equations, Loss &amp; Metrics</p>
+  </div>
+
+  <div class="nav-group"><div class="nav-group-label">Regression</div>
+    <a href="#slr">Simple Linear Regression</a>
+    <a href="#mlr">Multiple Linear Regression</a>
+    <a href="#plr">Polynomial Regression</a>
+    <a href="#ols">Ordinary Least Squares</a>
+    <a href="#ridge">Ridge Regression</a>
+    <a href="#lasso">Lasso Regression</a>
+    <a href="#elasticnet">ElasticNet Regression</a>
+  </div>
+  <div class="nav-group"><div class="nav-group-label">Classification</div>
+    <a href="#logistic">Logistic Regression</a>
+    <a href="#svm">Support Vector Machines</a>
+    <a href="#naivebayes">Naïve Bayes</a>
+    <a href="#knn">K-Nearest Neighbours</a>
+  </div>
+  <div class="nav-group"><div class="nav-group-label">Tree Methods</div>
+    <a href="#dtree">Decision Trees</a>
+    <a href="#rf">Random Forest</a>
+    <a href="#adaboost">AdaBoost</a>
+    <a href="#gboost">Gradient Boosting</a>
+    <a href="#xgboost">XGBoost</a>
+  </div>
+  <div class="nav-group"><div class="nav-group-label">Clustering &amp; Anomaly</div>
+    <a href="#kmeans">K-Means Clustering</a>
+    <a href="#isoforest">Isolation Forest</a>
+    <a href="#lof">Local Outlier Factor</a>
+    <a href="#dbscan">DBSCAN</a>
+  </div>
+  <div class="nav-group"><div class="nav-group-label">Dimensionality</div>
+    <a href="#pca">PCA</a>
+  </div>
+  <div class="nav-group"><div class="nav-group-label">Neural Networks</div>
+    <a href="#perceptron">Perceptron</a>
+    <a href="#activations">Activation Functions</a>
+    <a href="#loss">Loss Functions</a>
+    <a href="#optimisers">Optimisers</a>
+  </div>
+  <div class="nav-group"><div class="nav-group-label">Sequence Models</div>
+    <a href="#rnn">RNN</a>
+    <a href="#lstm">LSTM</a>
+    <a href="#gru">GRU</a>
+    <a href="#birnn">Bidirectional RNN</a>
+  </div>
+  <div class="nav-group"><div class="nav-group-label">Transformers</div>
+    <a href="#attention">Attention &amp; KQV</a>
+    <a href="#posenc">Positional Encoding</a>
+    <a href="#seq2seq">Seq2Seq</a>
+  </div>
+  <div class="nav-group"><div class="nav-group-label">Kernels</div>
+    <a href="#kernels">Kernel Functions</a>
+  </div>
+  <div class="nav-group"><div class="nav-group-label">Metrics &amp; Scores</div>
+    <a href="#classmetrics">Classification Metrics</a>
+    <a href="#regmetrics">Regression Metrics</a>
+    <a href="#treecriterion">Tree Criteria</a>
+  </div>
+</nav>
+
+<main>
+  <div class="page-title">ML &amp; DL Equation Reference</div>
+  <div class="page-subtitle">Complete formulae — models · metrics · losses · optimisers · architectures</div>
+
+  <!-- ===== REGRESSION ===== -->
+  <div class="section-divider"><span class="tag">Regression</span><hr></div>
+
+  <!-- Simple Linear Regression -->
+  <section id="slr">
+    <h2><span class="icon">📈</span> Simple Linear Regression</h2>
+    <h3>Model Equation</h3>
+    <div class="eq-card"><div class="eq-label">Hypothesis</div>
+      $$\hat{y} = \theta_0 + \theta_1 x$$
+      <div class="eq-desc">\(\theta_0\) = intercept, \(\theta_1\) = slope, \(x\) = feature</div>
+    </div>
+    <h3>Parameter Estimates (Closed Form)</h3>
+    <div class="eq-grid">
+      <div class="eq-card"><div class="eq-label">Slope</div>$$\theta_1 = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2}$$</div>
+      <div class="eq-card"><div class="eq-label">Intercept</div>$$\theta_0 = \bar{y} - \theta_1\bar{x}$$</div>
+    </div>
+    <h3>Cost / Loss Function</h3>
+    <div class="eq-card"><div class="eq-label">Mean Squared Error Cost</div>
+      $$J(\theta_0,\theta_1) = \frac{1}{2n}\sum_{i=1}^{n}\left(\hat{y}^{(i)} - y^{(i)}\right)^2$$
+    </div>
+    <h3>Gradient Descent Update</h3>
+    <div class="eq-grid">
+      <div class="eq-card"><div class="eq-label">Update θ₀</div>$$\theta_0 \leftarrow \theta_0 - \alpha\frac{\partial J}{\partial \theta_0} = \theta_0 - \frac{\alpha}{n}\sum_{i=1}^n(\hat{y}^{(i)}-y^{(i)})$$</div>
+      <div class="eq-card"><div class="eq-label">Update θ₁</div>$$\theta_1 \leftarrow \theta_1 - \alpha\frac{\partial J}{\partial \theta_1} = \theta_1 - \frac{\alpha}{n}\sum_{i=1}^n(\hat{y}^{(i)}-y^{(i)})x^{(i)}$$</div>
+    </div>
+  </section>
+
+  <!-- Multiple Linear Regression -->
+  <section id="mlr">
+    <h2><span class="icon">📊</span> Multiple Linear Regression</h2>
+    <div class="eq-card"><div class="eq-label">Hypothesis (vector form)</div>
+      $$\hat{y} = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \cdots + \theta_p x_p = \mathbf{X}\boldsymbol{\theta}$$
+      <div class="eq-desc">\(\mathbf{X} \in \mathbb{R}^{n \times (p+1)}\) includes bias column of 1s, \(\boldsymbol{\theta} \in \mathbb{R}^{p+1}\)</div>
+    </div>
+    <h3>Cost Function</h3>
+    <div class="eq-card"><div class="eq-label">MSE Cost</div>
+      $$J(\boldsymbol{\theta}) = \frac{1}{2n}\|\mathbf{X}\boldsymbol{\theta} - \mathbf{y}\|^2$$
+    </div>
+    <h3>Gradient</h3>
+    <div class="eq-card"><div class="eq-label">Gradient w.r.t. θ</div>
+      $$\nabla_{\boldsymbol{\theta}} J = \frac{1}{n}\mathbf{X}^\top(\mathbf{X}\boldsymbol{\theta} - \mathbf{y})$$
+    </div>
+  </section>
+
+  <!-- Polynomial Regression -->
+  <section id="plr">
+    <h2><span class="icon">〰️</span> Polynomial Linear Regression</h2>
+    <div class="eq-card"><div class="eq-label">Hypothesis (degree d)</div>
+      $$\hat{y} = \theta_0 + \theta_1 x + \theta_2 x^2 + \cdots + \theta_d x^d = \sum_{j=0}^{d}\theta_j x^j$$
+    </div>
+    <div class="note">Polynomial regression is still <strong>linear</strong> in parameters \(\boldsymbol{\theta}\). The same OLS / gradient descent applies after feature mapping \(\phi(x) = [1, x, x^2, \ldots, x^d]\).</div>
+    <div class="eq-card"><div class="eq-label">Feature Map</div>
+      $$\boldsymbol{\phi}(x) = \begin{bmatrix}1 \\ x \\ x^2 \\ \vdots \\ x^d\end{bmatrix}, \quad \hat{y} = \boldsymbol{\phi}(x)^\top\boldsymbol{\theta}$$
+    </div>
+    <h3>Cost Function</h3>
+    <div class="eq-card"><div class="eq-label">MSE Cost</div>
+      $$J(\boldsymbol{\theta}) = \frac{1}{2n}\sum_{i=1}^n\left(\sum_{j=0}^d \theta_j x_i^j - y_i\right)^2$$
+    </div>
+  </section>
+
+  <!-- OLS -->
+  <section id="ols">
+    <h2><span class="icon">🔢</span> Ordinary Least Squares (OLS)</h2>
+    <div class="eq-card"><div class="eq-label">Normal Equation (Closed Form Solution)</div>
+      $$\hat{\boldsymbol{\theta}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}$$
+      <div class="eq-desc">Exact solution — no iterations. Requires \(\mathbf{X}^\top\mathbf{X}\) to be invertible. \(O(n p^2 + p^3)\) complexity.</div>
+    </div>
+    <h3>Gauss-Markov Assumptions</h3>
+    <div class="eq-card"><div class="eq-label">Error / Residuals</div>
+      $$\mathbf{e} = \mathbf{y} - \hat{\mathbf{y}} = \mathbf{y} - \mathbf{X}\hat{\boldsymbol{\theta}}$$
+      $$\mathbb{E}[\boldsymbol{\varepsilon}] = \mathbf{0}, \quad \text{Var}(\boldsymbol{\varepsilon}) = \sigma^2 \mathbf{I}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Hat Matrix (Projection)</div>
+      $$\mathbf{H} = \mathbf{X}(\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top, \quad \hat{\mathbf{y}} = \mathbf{H}\mathbf{y}$$
+    </div>
+  </section>
+
+  <!-- Ridge -->
+  <section id="ridge">
+    <h2><span class="icon">🏔️</span> Ridge Regression (L2)</h2>
+    <div class="eq-card"><div class="eq-label">Cost / Loss Function</div>
+      $$J(\boldsymbol{\theta}) = \frac{1}{2n}\|\mathbf{X}\boldsymbol{\theta} - \mathbf{y}\|^2 + \lambda\|\boldsymbol{\theta}\|^2 = \frac{1}{2n}\sum_{i=1}^n(\hat{y}^{(i)}-y^{(i)})^2 + \lambda\sum_{j=1}^p\theta_j^2$$
+      <div class="eq-desc">\(\lambda \geq 0\) is the regularisation strength. Bias term \(\theta_0\) is usually not penalised.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Closed Form Solution</div>
+      $$\hat{\boldsymbol{\theta}}_{\text{ridge}} = (\mathbf{X}^\top\mathbf{X} + \lambda\mathbf{I})^{-1}\mathbf{X}^\top\mathbf{y}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Gradient</div>
+      $$\nabla_{\boldsymbol{\theta}}J = \frac{1}{n}\mathbf{X}^\top(\mathbf{X}\boldsymbol{\theta}-\mathbf{y}) + 2\lambda\boldsymbol{\theta}$$
+    </div>
+    <div class="note">Ridge shrinks coefficients toward zero but never sets them exactly to zero. Useful when many features contribute weakly (multicollinearity).</div>
+  </section>
+
+  <!-- Lasso -->
+  <section id="lasso">
+    <h2><span class="icon">🔪</span> Lasso Regression (L1)</h2>
+    <div class="eq-card"><div class="eq-label">Cost / Loss Function</div>
+      $$J(\boldsymbol{\theta}) = \frac{1}{2n}\sum_{i=1}^n(\hat{y}^{(i)}-y^{(i)})^2 + \lambda\sum_{j=1}^p|\theta_j|$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Subgradient</div>
+      $$\frac{\partial J}{\partial \theta_j} = \frac{1}{n}\sum_{i=1}^n(\hat{y}^{(i)}-y^{(i)})x_j^{(i)} + \lambda\,\text{sign}(\theta_j)$$
+      where \(\text{sign}(\theta_j) = \begin{cases}+1 & \theta_j > 0\\ [-1,1] & \theta_j=0\\ -1 & \theta_j<0\end{cases}\)
+    </div>
+    <div class="eq-card"><div class="eq-label">Soft-Thresholding Solution</div>
+      $$\hat{\theta}_j = \text{sign}(\tilde{\theta}_j)\max\!\left(|\tilde{\theta}_j|-\lambda,\;0\right)$$
+      <div class="eq-desc">\(\tilde{\theta}_j\) = OLS estimate for feature \(j\)</div>
+    </div>
+    <div class="note">Lasso promotes sparsity — drives some coefficients exactly to zero, performing automatic feature selection.</div>
+  </section>
+
+  <!-- ElasticNet -->
+  <section id="elasticnet">
+    <h2><span class="icon">🌐</span> ElasticNet Regression</h2>
+    <div class="eq-card"><div class="eq-label">Cost / Loss Function</div>
+      $$J(\boldsymbol{\theta}) = \frac{1}{2n}\sum_{i=1}^n(\hat{y}^{(i)}-y^{(i)})^2 + \lambda_1\sum_{j=1}^p|\theta_j| + \lambda_2\sum_{j=1}^p\theta_j^2$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Mixed Penalty (sklearn convention)</div>
+      $$J(\boldsymbol{\theta}) = \frac{1}{2n}\|\mathbf{X}\boldsymbol{\theta}-\mathbf{y}\|^2 + \alpha\rho\|\boldsymbol{\theta}\|_1 + \frac{\alpha(1-\rho)}{2}\|\boldsymbol{\theta}\|_2^2$$
+      <div class="eq-desc">\(\alpha\) = total regularisation, \(\rho \in [0,1]\) = L1 ratio. \(\rho=1\) → Lasso, \(\rho=0\) → Ridge.</div>
+    </div>
+    <div class="note">ElasticNet combines the sparsity of Lasso with the grouping effect of Ridge. Preferred when \(p \gg n\) or features are correlated.</div>
+  </section>
+
+  <!-- Logistic Regression -->
+  <div class="section-divider"><span class="tag">Classification</span><hr></div>
+  <section id="logistic">
+    <h2><span class="icon">📉</span> Logistic Regression</h2>
+    <div class="eq-card"><div class="eq-label">Sigmoid / Logistic Function</div>
+      $$\sigma(z) = \frac{1}{1+e^{-z}}, \quad z = \boldsymbol{\theta}^\top\mathbf{x}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Hypothesis</div>
+      $$\hat{y} = P(y=1|\mathbf{x};\boldsymbol{\theta}) = \sigma(\boldsymbol{\theta}^\top\mathbf{x})$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Log-Odds (Logit)</div>
+      $$\log\frac{P(y=1)}{P(y=0)} = \boldsymbol{\theta}^\top\mathbf{x}$$
+    </div>
+    <h3>Loss Function</h3>
+    <div class="eq-card"><div class="eq-label">Binary Cross-Entropy Loss</div>
+      $$\mathcal{L}(\boldsymbol{\theta}) = -\frac{1}{n}\sum_{i=1}^n\left[y^{(i)}\log\hat{y}^{(i)} + (1-y^{(i)})\log(1-\hat{y}^{(i)})\right]$$
+    </div>
+    <h3>Gradient</h3>
+    <div class="eq-card"><div class="eq-label">Gradient</div>
+      $$\nabla_{\boldsymbol{\theta}}\mathcal{L} = \frac{1}{n}\mathbf{X}^\top(\hat{\mathbf{y}}-\mathbf{y})$$
+    </div>
+    <h3>Multiclass (Softmax)</h3>
+    <div class="eq-card"><div class="eq-label">Softmax Output</div>
+      $$P(y=k|\mathbf{x}) = \frac{e^{\boldsymbol{\theta}_k^\top\mathbf{x}}}{\sum_{j=1}^K e^{\boldsymbol{\theta}_j^\top\mathbf{x}}}$$
+    </div>
+  </section>
+
+  <!-- SVM -->
+  <section id="svm">
+    <h2><span class="icon">✂️</span> Support Vector Machine</h2>
+    <h3>SVM Classifier</h3>
+    <div class="eq-card"><div class="eq-label">Decision Boundary</div>
+      $$\mathbf{w}^\top\mathbf{x} + b = 0$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Margin</div>
+      $$\text{Margin} = \frac{2}{\|\mathbf{w}\|}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Hard Margin Optimisation (Primal)</div>
+      $$\min_{\mathbf{w},b}\;\frac{1}{2}\|\mathbf{w}\|^2 \quad\text{s.t.}\quad y^{(i)}(\mathbf{w}^\top\mathbf{x}^{(i)}+b)\geq 1\;\forall i$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Soft Margin (Hinge Loss + Regularisation)</div>
+      $$\min_{\mathbf{w},b,\boldsymbol{\xi}}\;\frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i=1}^n\xi_i$$
+      $$\text{s.t.}\quad y^{(i)}(\mathbf{w}^\top\mathbf{x}^{(i)}+b)\geq 1-\xi_i,\;\xi_i\geq 0$$
+      <div class="eq-desc">\(C\) controls regularisation strength. Larger \(C\) = less margin violation tolerance.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Hinge Loss</div>
+      $$\mathcal{L}_{\text{hinge}} = \frac{1}{n}\sum_{i=1}^n\max\!\left(0,\,1-y^{(i)}(\mathbf{w}^\top\mathbf{x}^{(i)}+b)\right) + \frac{\lambda}{2}\|\mathbf{w}\|^2$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Dual Problem</div>
+      $$\max_{\boldsymbol{\alpha}}\sum_{i=1}^n\alpha_i - \frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\alpha_i\alpha_j y^{(i)}y^{(j)}\mathbf{x}^{(i)\top}\mathbf{x}^{(j)}$$
+      $$\text{s.t.}\;\sum_{i=1}^n\alpha_i y^{(i)}=0,\;0\leq\alpha_i\leq C$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Prediction</div>
+      $$\hat{y} = \text{sign}\!\left(\sum_{i\in\text{SV}}\alpha_i y^{(i)} K(\mathbf{x}^{(i)},\mathbf{x})+b\right)$$
+    </div>
+    <h3>SVR (Support Vector Regressor)</h3>
+    <div class="eq-card"><div class="eq-label">ε-Insensitive Loss</div>
+      $$\mathcal{L}_\varepsilon(y,\hat{y}) = \max(0, |y-\hat{y}|-\varepsilon)$$
+    </div>
+    <div class="eq-card"><div class="eq-label">SVR Primal</div>
+      $$\min_{\mathbf{w},b,\xi,\xi^*}\;\frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i=1}^n(\xi_i+\xi_i^*)$$
+      $$\text{s.t.}\;y_i-(\mathbf{w}^\top\mathbf{x}_i+b)\leq\varepsilon+\xi_i,\;(\mathbf{w}^\top\mathbf{x}_i+b)-y_i\leq\varepsilon+\xi_i^*,\;\xi_i,\xi_i^*\geq 0$$
+    </div>
+  </section>
+
+  <!-- Naive Bayes -->
+  <section id="naivebayes">
+    <h2><span class="icon">🎲</span> Naïve Bayes</h2>
+    <div class="eq-card"><div class="eq-label">Bayes Theorem</div>
+      $$P(y|\mathbf{x}) = \frac{P(\mathbf{x}|y)\,P(y)}{P(\mathbf{x})}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Naïve Independence Assumption</div>
+      $$P(\mathbf{x}|y) = \prod_{j=1}^p P(x_j|y)$$
+    </div>
+    <div class="eq-card"><div class="eq-label">MAP Prediction</div>
+      $$\hat{y} = \arg\max_y P(y)\prod_{j=1}^p P(x_j|y)$$
+    </div>
+    <h3>Bernoulli Naïve Bayes</h3>
+    <div class="eq-card"><div class="eq-label">Likelihood (binary features)</div>
+      $$P(x_j|y) = p_{jy}^{x_j}(1-p_{jy})^{1-x_j}, \quad x_j\in\{0,1\}$$
+      $$p_{jy} = \frac{\text{count}(x_j=1 \;\text{and}\; y) + \alpha}{\text{count}(y) + 2\alpha} \quad\text{(Laplace smoothing)}$$
+    </div>
+    <h3>Multinomial Naïve Bayes</h3>
+    <div class="eq-card"><div class="eq-label">Likelihood (count features)</div>
+      $$P(\mathbf{x}|y) = \frac{(\sum_j x_j)!}{\prod_j x_j!}\prod_j\theta_{jy}^{x_j}$$
+      $$\theta_{jy} = \frac{\sum_i x_{ij}\mathbf{1}[y_i=y] + \alpha}{\sum_k\sum_i x_{ik}\mathbf{1}[y_i=y] + p\alpha}$$
+    </div>
+    <h3>Gaussian Naïve Bayes</h3>
+    <div class="eq-card"><div class="eq-label">Likelihood (continuous features)</div>
+      $$P(x_j|y) = \frac{1}{\sqrt{2\pi\sigma_{jy}^2}}\exp\!\left(-\frac{(x_j-\mu_{jy})^2}{2\sigma_{jy}^2}\right)$$
+      <div class="eq-desc">\(\mu_{jy},\sigma_{jy}^2\) estimated from training samples of class \(y\)</div>
+    </div>
+  </section>
+
+  <!-- KNN -->
+  <section id="knn">
+    <h2><span class="icon">🔵</span> K-Nearest Neighbours</h2>
+    <div class="eq-card"><div class="eq-label">Euclidean Distance</div>$$d(\mathbf{x},\mathbf{x}') = \sqrt{\sum_{j=1}^p(x_j-x_j')^2} = \|\mathbf{x}-\mathbf{x}'\|_2$$</div>
+    <div class="eq-card"><div class="eq-label">Minkowski Distance (generalised)</div>$$d_m(\mathbf{x},\mathbf{x}') = \left(\sum_{j=1}^p|x_j-x_j'|^m\right)^{1/m}$$<div class="eq-desc">\(m=1\): Manhattan, \(m=2\): Euclidean, \(m\to\infty\): Chebyshev</div></div>
+    <div class="eq-card"><div class="eq-label">KNN Classifier</div>$$\hat{y} = \underset{c}{\arg\max}\;\sum_{\mathbf{x}^{(i)}\in\mathcal{N}_k(\mathbf{x})}\mathbf{1}[y^{(i)}=c]$$<div class="eq-desc">Majority vote over \(k\) nearest neighbours \(\mathcal{N}_k(\mathbf{x})\)</div></div>
+    <div class="eq-card"><div class="eq-label">KNN Regressor</div>$$\hat{y} = \frac{1}{k}\sum_{\mathbf{x}^{(i)}\in\mathcal{N}_k(\mathbf{x})}y^{(i)}$$</div>
+    <h3>KD-Tree</h3>
+    <div class="eq-card"><div class="eq-label">Space Partition</div>
+      <div class="eq-desc">Binary tree splitting at each level on alternating dimensions. Split axis: \(j^* = (d \mod p)\). Split value: median of \(x_{j^*}\). Search: O(\(\log n\)) average, O(\(kn\)) worst. Efficient for \(p \ll 20\).</div>
+    </div>
+    <h3>Ball-Tree</h3>
+    <div class="eq-card"><div class="eq-label">Ball Node</div>
+      $$\text{Ball}(\mathbf{c},r) = \{\mathbf{x}: \|\mathbf{x}-\mathbf{c}\|\leq r\}$$
+      <div class="eq-desc">Centroid \(\mathbf{c}\), radius \(r = \max_i d(\mathbf{x}^{(i)},\mathbf{c})\). Better than KD-tree for high dimensions.</div>
+    </div>
+  </section>
+
+  <!-- Decision Trees -->
+  <div class="section-divider"><span class="tag">Tree Methods</span><hr></div>
+  <section id="dtree">
+    <h2><span class="icon">🌳</span> Decision Trees</h2>
+    <h3>Impurity Measures</h3>
+    <div class="eq-grid">
+      <div class="eq-card"><div class="eq-label">Gini Impurity</div>$$G = 1 - \sum_{k=1}^K p_k^2$$</div>
+      <div class="eq-card"><div class="eq-label">Entropy</div>$$H = -\sum_{k=1}^K p_k\log_2 p_k$$</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Information Gain</div>
+      $$IG = H(\text{parent}) - \sum_{v}\frac{n_v}{n}H(\text{child}_v)$$
+      <div class="eq-desc">Split chosen to maximise \(IG\). \(p_k\) = fraction of samples of class \(k\) in node.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Gain Ratio (C4.5)</div>
+      $$\text{GainRatio} = \frac{IG}{\text{SplitInfo}}, \quad \text{SplitInfo} = -\sum_v\frac{n_v}{n}\log_2\frac{n_v}{n}$$
+    </div>
+    <h3>Regression Tree</h3>
+    <div class="eq-card"><div class="eq-label">Variance Reduction / MSE Split Criterion</div>
+      $$J = \frac{1}{n}\sum_{i=1}^n(y_i - \bar{y})^2 - \sum_v\frac{n_v}{n}\cdot\frac{1}{n_v}\sum_{i\in v}(y_i-\bar{y}_v)^2$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Leaf Prediction</div>
+      $$\hat{y}_{\text{leaf}} = \frac{1}{|R_m|}\sum_{i\in R_m}y_i$$
+    </div>
+  </section>
+
+  <!-- Random Forest -->
+  <section id="rf">
+    <h2><span class="icon">🌲🌲🌲</span> Random Forest</h2>
+    <div class="eq-card"><div class="eq-label">Bootstrap Aggregation (Bagging)</div>
+      $$\hat{y}_{\text{RF}} = \frac{1}{B}\sum_{b=1}^B T_b(\mathbf{x})$$
+      <div class="eq-desc">Each tree \(T_b\) trained on bootstrap sample \(\mathcal{D}_b\) with random feature subset \(m \approx \sqrt{p}\) (classifier) or \(m \approx p/3\) (regressor).</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Majority Vote (Classifier)</div>
+      $$\hat{y} = \underset{c}{\arg\max}\;\sum_{b=1}^B\mathbf{1}[T_b(\mathbf{x})=c]$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Out-of-Bag Error</div>
+      $$\text{OOB Error} = \frac{1}{n}\sum_{i=1}^n\mathbf{1}\!\left[\hat{y}_i^{\text{OOB}}\neq y_i\right]$$
+      <div class="eq-desc">Estimate on samples not in bootstrap — free internal validation.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Feature Importance (MDI)</div>
+      $$\text{FI}(j) = \frac{1}{B}\sum_{b=1}^B\sum_{t:\text{split on }j}\frac{n_t}{n}\cdot\Delta\text{impurity}(t)$$
+    </div>
+  </section>
+
+  <!-- AdaBoost -->
+  <section id="adaboost">
+    <h2><span class="icon">⚡</span> AdaBoost</h2>
+    <div class="eq-card"><div class="eq-label">Algorithm</div>
+      <div style="font-size:13px;color:var(--muted);">Initialise: \(w_i^{(1)} = 1/n\) for all \(i\)</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:.5rem;">For \(m=1\ldots M\):</div>
+      $$\varepsilon_m = \sum_{i=1}^n w_i^{(m)}\mathbf{1}[h_m(\mathbf{x}^{(i)})\neq y^{(i)}]$$
+      $$\alpha_m = \frac{1}{2}\ln\!\left(\frac{1-\varepsilon_m}{\varepsilon_m}\right)$$
+      $$w_i^{(m+1)} = \frac{w_i^{(m)}\exp\!\left(-\alpha_m y^{(i)} h_m(\mathbf{x}^{(i)})\right)}{Z_m}$$
+      <div class="eq-desc">\(Z_m\) = normalisation constant. \(y\in\{-1,+1\}\).</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Final Prediction</div>
+      $$H(\mathbf{x}) = \text{sign}\!\left(\sum_{m=1}^M\alpha_m h_m(\mathbf{x})\right)$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Exponential Loss</div>
+      $$\mathcal{L}_{\text{exp}} = \sum_{i=1}^n\exp\!\left(-y^{(i)}\sum_m\alpha_m h_m(\mathbf{x}^{(i)})\right)$$
+    </div>
+  </section>
+
+  <!-- Gradient Boosting -->
+  <section id="gboost">
+    <h2><span class="icon">📈⚡</span> Gradient Boosting</h2>
+    <div class="eq-card"><div class="eq-label">Additive Model</div>
+      $$F_M(\mathbf{x}) = F_0(\mathbf{x}) + \sum_{m=1}^M\eta\, T_m(\mathbf{x})$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Pseudo-Residuals (Negative Gradient)</div>
+      $$r_i^{(m)} = -\left[\frac{\partial \mathcal{L}(y_i, F(\mathbf{x}_i))}{\partial F(\mathbf{x}_i)}\right]_{F=F_{m-1}}$$
+      <div class="eq-desc">Fit weak learner \(T_m\) to these residuals at each stage.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">MSE Loss Residuals</div>
+      $$r_i = y_i - F_{m-1}(\mathbf{x}_i)$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Line Search Step</div>
+      $$\eta_m = \arg\min_\eta\sum_{i=1}^n\mathcal{L}(y_i,\; F_{m-1}(\mathbf{x}_i)+\eta T_m(\mathbf{x}_i))$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Regularised Update</div>
+      $$F_m(\mathbf{x}) = F_{m-1}(\mathbf{x}) + \eta\cdot T_m(\mathbf{x})$$
+      <div class="eq-desc">\(\eta\) = learning rate (shrinkage). Smaller \(\eta\) → better generalisation, more trees needed.</div>
+    </div>
+  </section>
+
+  <!-- XGBoost -->
+  <section id="xgboost">
+    <h2><span class="icon">🚀</span> XGBoost</h2>
+    <div class="eq-card"><div class="eq-label">Regularised Objective</div>
+      $$\mathcal{L}^{(m)} = \sum_{i=1}^n\left[\mathcal{L}(y_i, \hat{y}_i^{(m-1)}+f_m(\mathbf{x}_i))\right] + \Omega(f_m)$$
+      $$\Omega(f) = \gamma T + \frac{1}{2}\lambda\|\mathbf{w}\|^2$$
+      <div class="eq-desc">\(T\) = number of leaves, \(\mathbf{w}\) = leaf weights, \(\gamma\) = leaf complexity penalty</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Second-Order Taylor Approximation</div>
+      $$\mathcal{L}^{(m)} \approx \sum_{i=1}^n\left[g_i f_m(\mathbf{x}_i) + \frac{1}{2}h_i f_m^2(\mathbf{x}_i)\right] + \Omega(f_m)$$
+      $$g_i = \frac{\partial\mathcal{L}(y_i,\hat{y}^{(m-1)})}{\partial\hat{y}^{(m-1)}}, \quad h_i = \frac{\partial^2\mathcal{L}(y_i,\hat{y}^{(m-1)})}{\partial(\hat{y}^{(m-1)})^2}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Optimal Leaf Weight</div>
+      $$w_j^* = -\frac{\sum_{i\in R_j}g_i}{\sum_{i\in R_j}h_i + \lambda}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Optimal Objective Value</div>
+      $$\mathcal{L}^{*(m)} = -\frac{1}{2}\sum_{j=1}^T\frac{\left(\sum_{i\in R_j}g_i\right)^2}{\sum_{i\in R_j}h_i+\lambda} + \gamma T$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Split Gain</div>
+      $$\text{Gain} = \frac{1}{2}\left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right]-\gamma$$
+    </div>
+  </section>
+
+  <!-- Clustering -->
+  <div class="section-divider"><span class="tag">Clustering &amp; Anomaly Detection</span><hr></div>
+  <section id="kmeans">
+    <h2><span class="icon">⭕</span> K-Means Clustering</h2>
+    <div class="eq-card"><div class="eq-label">Objective (WCSS / Inertia)</div>
+      $$J = \sum_{k=1}^K\sum_{\mathbf{x}_i\in C_k}\|\mathbf{x}_i - \boldsymbol{\mu}_k\|^2$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Centroid Update</div>
+      $$\boldsymbol{\mu}_k = \frac{1}{|C_k|}\sum_{\mathbf{x}_i\in C_k}\mathbf{x}_i$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Assignment Step</div>
+      $$z_i = \underset{k}{\arg\min}\;\|\mathbf{x}_i - \boldsymbol{\mu}_k\|^2$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Silhouette Score</div>
+      $$s_i = \frac{b_i - a_i}{\max(a_i,\, b_i)}$$
+      <div class="eq-desc">\(a_i\) = mean intra-cluster distance, \(b_i\) = mean nearest-cluster distance. \(s\in[-1,1]\); higher → better.</div>
+    </div>
+    <h3>Hierarchical (Agglomerative / Divisive)</h3>
+    <div class="eq-grid">
+      <div class="eq-card"><div class="eq-label">Single Linkage</div>$$d(A,B) = \min_{\mathbf{a}\in A,\mathbf{b}\in B}\|\mathbf{a}-\mathbf{b}\|$$</div>
+      <div class="eq-card"><div class="eq-label">Complete Linkage</div>$$d(A,B) = \max_{\mathbf{a}\in A,\mathbf{b}\in B}\|\mathbf{a}-\mathbf{b}\|$$</div>
+      <div class="eq-card"><div class="eq-label">Average Linkage (UPGMA)</div>$$d(A,B) = \frac{1}{|A||B|}\sum_{\mathbf{a}\in A}\sum_{\mathbf{b}\in B}\|\mathbf{a}-\mathbf{b}\|$$</div>
+      <div class="eq-card"><div class="eq-label">Ward Linkage</div>$$d(A,B) = \sqrt{\frac{2|A||B|}{|A|+|B|}}\|\boldsymbol{\mu}_A-\boldsymbol{\mu}_B\|$$</div>
+    </div>
+  </section>
+
+  <!-- Isolation Forest -->
+  <section id="isoforest">
+    <h2><span class="icon">🌲🔴</span> Isolation Forest</h2>
+    <div class="eq-card"><div class="eq-label">Anomaly Score</div>
+      $$s(\mathbf{x},n) = 2^{-\dfrac{\mathbb{E}[h(\mathbf{x})]}{c(n)}}$$
+      <div class="eq-desc">\(h(\mathbf{x})\) = path length from root to leaf for point \(\mathbf{x}\). \(c(n)\) = expected path length in unsuccessful BST search.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Expected Path Length Normaliser</div>
+      $$c(n) = 2H(n-1) - \frac{2(n-1)}{n}, \quad H(i)=\ln(i)+0.5772\ldots\text{(Euler constant)}$$
+    </div>
+    <div class="note">Score \(s\approx 1\) → anomaly; \(s\approx 0.5\) → normal. Anomalies have shorter average path lengths because they are isolated quickly.</div>
+  </section>
+
+  <!-- LOF -->
+  <section id="lof">
+    <h2><span class="icon">🔍</span> Local Outlier Factor (LOF)</h2>
+    <div class="eq-card"><div class="eq-label">Reachability Distance</div>
+      $$\text{reach-dist}_k(\mathbf{x},\mathbf{o}) = \max\!\left(d_k(\mathbf{o}),\; d(\mathbf{x},\mathbf{o})\right)$$
+      <div class="eq-desc">\(d_k(\mathbf{o})\) = distance to \(k\)-th nearest neighbour of \(\mathbf{o}\)</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Local Reachability Density</div>
+      $$\text{lrd}_k(\mathbf{x}) = \left(\frac{1}{k}\sum_{\mathbf{o}\in\mathcal{N}_k(\mathbf{x})}\text{reach-dist}_k(\mathbf{x},\mathbf{o})\right)^{-1}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">LOF Score</div>
+      $$\text{LOF}_k(\mathbf{x}) = \frac{\dfrac{1}{k}\displaystyle\sum_{\mathbf{o}\in\mathcal{N}_k(\mathbf{x})}\text{lrd}_k(\mathbf{o})}{\text{lrd}_k(\mathbf{x})}$$
+      <div class="eq-desc">LOF \(\gg 1\) → outlier (less dense than neighbours). LOF \(\approx 1\) → inlier.</div>
+    </div>
+  </section>
+
+  <!-- DBSCAN -->
+  <section id="dbscan">
+    <h2><span class="icon">🫧</span> DBSCAN</h2>
+    <div class="eq-grid">
+      <div class="eq-card"><div class="eq-label">ε-Neighbourhood</div>$$N_\varepsilon(\mathbf{x}) = \{\mathbf{x}'\in\mathcal{D} : d(\mathbf{x},\mathbf{x}')\leq\varepsilon\}$$</div>
+      <div class="eq-card"><div class="eq-label">Core Point Condition</div>$$|N_\varepsilon(\mathbf{x})| \geq \text{MinPts}$$</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Point Classification</div>
+      <div class="eq-desc" style="font-size:13.5px;">
+        <strong style="color:var(--accent3)">Core Point:</strong> \(|N_\varepsilon(\mathbf{x})|\geq\text{MinPts}\)<br>
+        <strong style="color:var(--accent5)">Border Point:</strong> Not core, but in \(N_\varepsilon\) of a core point<br>
+        <strong style="color:var(--accent4)">Noise Point:</strong> Neither core nor border
+      </div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Density-Reachability</div>
+      <div class="eq-desc">\(\mathbf{x}'\) is directly density-reachable from core \(\mathbf{x}\) iff \(\mathbf{x}'\in N_\varepsilon(\mathbf{x})\). Chain of direct reachability → density-connected cluster.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Silhouette Score (cluster quality)</div>
+      $$S = \frac{1}{n}\sum_{i=1}^n s_i, \quad s_i = \frac{b_i-a_i}{\max(a_i,b_i)}$$
+    </div>
+  </section>
+
+  <!-- PCA -->
+  <div class="section-divider"><span class="tag">Dimensionality Reduction</span><hr></div>
+  <section id="pca">
+    <h2><span class="icon">🔻</span> Principal Component Analysis (PCA)</h2>
+    <div class="eq-card"><div class="eq-label">Covariance Matrix</div>
+      $$\boldsymbol{\Sigma} = \frac{1}{n-1}\sum_{i=1}^n(\mathbf{x}^{(i)}-\bar{\mathbf{x}})(\mathbf{x}^{(i)}-\bar{\mathbf{x}})^\top = \frac{1}{n-1}\tilde{\mathbf{X}}^\top\tilde{\mathbf{X}}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Eigendecomposition</div>
+      $$\boldsymbol{\Sigma}\mathbf{v}_j = \lambda_j\mathbf{v}_j, \quad j=1,\ldots,p$$
+      <div class="eq-desc">Eigenvectors \(\mathbf{v}_j\) = principal components. Eigenvalues \(\lambda_j\) = variance explained.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">SVD Approach</div>
+      $$\tilde{\mathbf{X}} = \mathbf{U}\boldsymbol{\Sigma}_s\mathbf{V}^\top$$
+      <div class="eq-desc">Principal components = columns of \(\mathbf{V}\). Singular values \(\sigma_j = \sqrt{(n-1)\lambda_j}\).</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Projection to d Dimensions</div>
+      $$\mathbf{Z} = \tilde{\mathbf{X}}\mathbf{W}_d, \quad \mathbf{W}_d = [\mathbf{v}_1,\ldots,\mathbf{v}_d]\in\mathbb{R}^{p\times d}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Variance Explained Ratio</div>
+      $$\text{VER}_d = \frac{\sum_{j=1}^d\lambda_j}{\sum_{j=1}^p\lambda_j}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Reconstruction Error</div>
+      $$\mathcal{L}_{\text{PCA}} = \|\tilde{\mathbf{X}} - \mathbf{Z}\mathbf{W}_d^\top\|_F^2 = \sum_{j=d+1}^p\lambda_j$$
+    </div>
+    <h3>Kernel PCA</h3>
+    <div class="eq-card"><div class="eq-label">Kernel Matrix</div>
+      $$\mathbf{K}_{ij} = k(\mathbf{x}^{(i)},\mathbf{x}^{(j)}) = \phi(\mathbf{x}^{(i)})^\top\phi(\mathbf{x}^{(j)})$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Centred Kernel</div>
+      $$\tilde{\mathbf{K}} = \mathbf{K} - \mathbf{1}_n\mathbf{K} - \mathbf{K}\mathbf{1}_n + \mathbf{1}_n\mathbf{K}\mathbf{1}_n, \quad \mathbf{1}_n=\tfrac{1}{n}\mathbf{1}\mathbf{1}^\top$$
+    </div>
+    <h3>Sparse PCA</h3>
+    <div class="eq-card"><div class="eq-label">Objective</div>
+      $$\min_{\mathbf{A},\mathbf{B}}\|\tilde{\mathbf{X}}-\tilde{\mathbf{X}}\mathbf{B}\mathbf{A}^\top\|_F^2 + \lambda\|\mathbf{B}\|_1 \quad\text{s.t.}\;\mathbf{A}^\top\mathbf{A}=\mathbf{I}$$
+    </div>
+    <h3>Incremental / Online PCA</h3>
+    <div class="note">Processes data in mini-batches. Uses rank-1 updates to the SVD rather than full eigen-decomposition. Memory: O(\(d \cdot p\)) instead of O(\(n \cdot p\)).</div>
+  </section>
+
+  <!-- Perceptron -->
+  <div class="section-divider"><span class="tag">Neural Networks</span><hr></div>
+  <section id="perceptron">
+    <h2><span class="icon">🧠</span> Perceptron</h2>
+    <div class="eq-card"><div class="eq-label">Net Input</div>$$z = \sum_{j=1}^p w_j x_j + b = \mathbf{w}^\top\mathbf{x}+b$$</div>
+    <div class="eq-card"><div class="eq-label">Activation (Heaviside)</div>$$\hat{y} = \begin{cases}1 & z\geq 0\\ 0 & z<0\end{cases}$$</div>
+    <div class="eq-card"><div class="eq-label">Weight Update (Perceptron Learning Rule)</div>
+      $$w_j \leftarrow w_j + \eta(y-\hat{y})x_j, \quad b\leftarrow b+\eta(y-\hat{y})$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Perceptron Loss</div>
+      $$\mathcal{L} = \sum_{i\in\mathcal{M}}\left(-y^{(i)}\cdot(\mathbf{w}^\top\mathbf{x}^{(i)})\right)$$
+      <div class="eq-desc">\(\mathcal{M}\) = set of misclassified samples. \(y\in\{-1,+1\}\)</div>
+    </div>
+  </section>
+
+  <!-- Activation Functions -->
+  <section id="activations">
+    <h2><span class="icon">⚡</span> Activation Functions</h2>
+    <div class="eq-grid">
+      <div class="eq-card"><div class="eq-label">Sigmoid</div>
+        $$\sigma(z) = \frac{1}{1+e^{-z}}\in(0,1)$$
+        $$\sigma'(z) = \sigma(z)(1-\sigma(z))$$
+      </div>
+      <div class="eq-card"><div class="eq-label">Tanh</div>
+        $$\tanh(z) = \frac{e^z-e^{-z}}{e^z+e^{-z}}\in(-1,1)$$
+        $$\tanh'(z) = 1-\tanh^2(z)$$
+      </div>
+      <div class="eq-card"><div class="eq-label">ReLU</div>
+        $$\text{ReLU}(z) = \max(0,z)$$
+        $$\text{ReLU}'(z) = \begin{cases}1 & z>0\\ 0 & z\leq 0\end{cases}$$
+      </div>
+      <div class="eq-card"><div class="eq-label">Leaky ReLU</div>
+        $$\text{LReLU}(z) = \begin{cases}z & z>0\\ \alpha z & z\leq 0\end{cases}, \;\alpha\approx 0.01$$
+        $$\text{LReLU}'(z) = \begin{cases}1 & z>0\\ \alpha & z\leq 0\end{cases}$$
+      </div>
+      <div class="eq-card"><div class="eq-label">ELU (Exponential Linear Unit)</div>
+        $$\text{ELU}(z) = \begin{cases}z & z>0\\ \alpha(e^z-1) & z\leq 0\end{cases}$$
+        $$\text{ELU}'(z) = \begin{cases}1 & z>0\\ \text{ELU}(z)+\alpha & z\leq 0\end{cases}$$
+      </div>
+      <div class="eq-card"><div class="eq-label">Softmax (output layer)</div>
+        $$\text{softmax}(\mathbf{z})_k = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}$$
+        $$\frac{\partial\text{softmax}_k}{\partial z_j} = \text{softmax}_k(\delta_{kj}-\text{softmax}_j)$$
+      </div>
+    </div>
+  </section>
+
+  <!-- Loss Functions -->
+  <section id="loss">
+    <h2><span class="icon">💥</span> Neural Network Loss Functions</h2>
+    <div class="eq-card"><div class="eq-label">Binary Cross-Entropy</div>
+      $$\mathcal{L}_{\text{BCE}} = -\frac{1}{n}\sum_{i=1}^n\left[y^{(i)}\log\hat{y}^{(i)} + (1-y^{(i)})\log(1-\hat{y}^{(i)})\right]$$
+      <div class="eq-desc">Used with sigmoid output. \(y\in\{0,1\}\).</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Categorical Cross-Entropy</div>
+      $$\mathcal{L}_{\text{CCE}} = -\frac{1}{n}\sum_{i=1}^n\sum_{k=1}^K y_{ik}\log\hat{y}_{ik}$$
+      <div class="eq-desc">Used with softmax output + one-hot labels. \(K\) classes.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Sparse Categorical Cross-Entropy</div>
+      $$\mathcal{L}_{\text{SCCE}} = -\frac{1}{n}\sum_{i=1}^n\log\hat{y}_{i,c_i}$$
+      <div class="eq-desc">Same as CCE but labels are integer class indices \(c_i\) rather than one-hot vectors.</div>
+    </div>
+  </section>
+
+  <!-- Optimisers -->
+  <section id="optimisers">
+    <h2><span class="icon">⚙️</span> Optimisers</h2>
+    <h3>Gradient Descent Variants</h3>
+    <div class="eq-card"><div class="eq-label">Batch Gradient Descent</div>
+      $$\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \eta\nabla_{\boldsymbol{\theta}}\mathcal{L}(\boldsymbol{\theta};\mathcal{D})$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Stochastic Gradient Descent (SGD)</div>
+      $$\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \eta\nabla_{\boldsymbol{\theta}}\mathcal{L}(\boldsymbol{\theta};\mathbf{x}^{(i)},y^{(i)})$$
+      <div class="eq-desc">One sample per update. Noisy but fast; escapes local minima.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Mini-Batch SGD</div>
+      $$\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \eta\frac{1}{B}\sum_{i\in\mathcal{B}}\nabla_{\boldsymbol{\theta}}\mathcal{L}(\boldsymbol{\theta};\mathbf{x}^{(i)},y^{(i)})$$
+      <div class="eq-desc">Batch size \(B\) typically 32–512. Balance between batch GD and SGD.</div>
+    </div>
+    <h3>Momentum Methods</h3>
+    <div class="eq-card"><div class="eq-label">SGD with Momentum</div>
+      $$\mathbf{v}_t = \beta\mathbf{v}_{t-1} + (1-\beta)\nabla_{\boldsymbol{\theta}}\mathcal{L}_t$$
+      $$\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \eta\mathbf{v}_t$$
+      <div class="eq-desc">\(\beta\approx 0.9\). Accumulates velocity in consistent gradient directions.</div>
+    </div>
+    <h3>Adaptive Methods</h3>
+    <div class="eq-card"><div class="eq-label">AdaGrad</div>
+      $$\mathbf{G}_t = \mathbf{G}_{t-1} + \mathbf{g}_t\odot\mathbf{g}_t$$
+      $$\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \frac{\eta}{\sqrt{\mathbf{G}_t}+\varepsilon}\odot\mathbf{g}_t$$
+      <div class="eq-desc">Accumulated squared gradients. Adapts per parameter. Can vanish learning rate.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">RMSProp</div>
+      $$\mathbf{v}_t = \beta\mathbf{v}_{t-1} + (1-\beta)\mathbf{g}_t^2$$
+      $$\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \frac{\eta}{\sqrt{\mathbf{v}_t}+\varepsilon}\mathbf{g}_t$$
+      <div class="eq-desc">Exponential moving average of squared gradients. Fixes AdaGrad's diminishing LR.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Adam (Adaptive Moment Estimation)</div>
+      $$\mathbf{m}_t = \beta_1\mathbf{m}_{t-1}+(1-\beta_1)\mathbf{g}_t \quad\text{(1st moment)}$$
+      $$\mathbf{v}_t = \beta_2\mathbf{v}_{t-1}+(1-\beta_2)\mathbf{g}_t^2 \quad\text{(2nd moment)}$$
+      $$\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1-\beta_1^t}, \quad \hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1-\beta_2^t} \quad\text{(bias correction)}$$
+      $$\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} - \frac{\eta}{\sqrt{\hat{\mathbf{v}}_t}+\varepsilon}\hat{\mathbf{m}}_t$$
+      <div class="eq-desc">Defaults: \(\beta_1=0.9,\;\beta_2=0.999,\;\varepsilon=10^{-8}\)</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">AdaDelta</div>
+      $$\mathbf{E}[\mathbf{g}^2]_t = \rho\mathbf{E}[\mathbf{g}^2]_{t-1}+(1-\rho)\mathbf{g}_t^2$$
+      $$\Delta\boldsymbol{\theta}_t = -\frac{\sqrt{\mathbf{E}[\Delta\boldsymbol{\theta}^2]_{t-1}+\varepsilon}}{\sqrt{\mathbf{E}[\mathbf{g}^2]_t+\varepsilon}}\mathbf{g}_t$$
+      $$\mathbf{E}[\Delta\boldsymbol{\theta}^2]_t = \rho\mathbf{E}[\Delta\boldsymbol{\theta}^2]_{t-1}+(1-\rho)\Delta\boldsymbol{\theta}_t^2$$
+      <div class="eq-desc">No manual LR required. Ratio of RMS of updates to RMS of gradients.</div>
+    </div>
+  </section>
+
+  <!-- RNN / LSTM / GRU -->
+  <div class="section-divider"><span class="tag">Sequence Models</span><hr></div>
+  <section id="rnn">
+    <h2><span class="icon">🔄</span> Recurrent Neural Network (RNN)</h2>
+    <div class="eq-card"><div class="eq-label">Hidden State Update</div>
+      $$\mathbf{h}_t = \tanh(\mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{W}_{xh}\mathbf{x}_t + \mathbf{b}_h)$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Output</div>
+      $$\mathbf{y}_t = \mathbf{W}_{hy}\mathbf{h}_t + \mathbf{b}_y$$
+    </div>
+    <div class="eq-card"><div class="eq-label">BPTT Loss</div>
+      $$\mathcal{L} = \sum_{t=1}^T\mathcal{L}_t, \quad \frac{\partial\mathcal{L}}{\partial\mathbf{W}} = \sum_{t=1}^T\frac{\partial\mathcal{L}_t}{\partial\mathbf{W}}$$
+    </div>
+    <div class="warn">Vanilla RNNs suffer from vanishing/exploding gradients for long sequences. Use LSTM or GRU instead.</div>
+  </section>
+
+  <section id="lstm">
+    <h2><span class="icon">🔁</span> Long Short-Term Memory (LSTM)</h2>
+    <div class="eq-card"><div class="eq-label">Gates and State Equations</div>
+      $$\mathbf{f}_t = \sigma(\mathbf{W}_f[\mathbf{h}_{t-1};\mathbf{x}_t]+\mathbf{b}_f) \quad\text{(Forget gate)}$$
+      $$\mathbf{i}_t = \sigma(\mathbf{W}_i[\mathbf{h}_{t-1};\mathbf{x}_t]+\mathbf{b}_i) \quad\text{(Input gate)}$$
+      $$\tilde{\mathbf{c}}_t = \tanh(\mathbf{W}_c[\mathbf{h}_{t-1};\mathbf{x}_t]+\mathbf{b}_c) \quad\text{(Candidate)}$$
+      $$\mathbf{o}_t = \sigma(\mathbf{W}_o[\mathbf{h}_{t-1};\mathbf{x}_t]+\mathbf{b}_o) \quad\text{(Output gate)}$$
+      $$\mathbf{c}_t = \mathbf{f}_t\odot\mathbf{c}_{t-1} + \mathbf{i}_t\odot\tilde{\mathbf{c}}_t \quad\text{(Cell state)}$$
+      $$\mathbf{h}_t = \mathbf{o}_t\odot\tanh(\mathbf{c}_t) \quad\text{(Hidden state)}$$
+    </div>
+    <div class="note">\(\odot\) = element-wise (Hadamard) product. \([\mathbf{h}_{t-1};\mathbf{x}_t]\) = concatenation. Forget gate prevents vanishing gradients through the cell state highway.</div>
+  </section>
+
+  <section id="gru">
+    <h2><span class="icon">⚡🔁</span> Gated Recurrent Unit (GRU)</h2>
+    <div class="eq-card"><div class="eq-label">GRU Equations</div>
+      $$\mathbf{z}_t = \sigma(\mathbf{W}_z[\mathbf{h}_{t-1};\mathbf{x}_t]+\mathbf{b}_z) \quad\text{(Update gate)}$$
+      $$\mathbf{r}_t = \sigma(\mathbf{W}_r[\mathbf{h}_{t-1};\mathbf{x}_t]+\mathbf{b}_r) \quad\text{(Reset gate)}$$
+      $$\tilde{\mathbf{h}}_t = \tanh(\mathbf{W}_h[\mathbf{r}_t\odot\mathbf{h}_{t-1};\mathbf{x}_t]+\mathbf{b}_h) \quad\text{(Candidate)}$$
+      $$\mathbf{h}_t = (1-\mathbf{z}_t)\odot\mathbf{h}_{t-1} + \mathbf{z}_t\odot\tilde{\mathbf{h}}_t \quad\text{(Hidden state)}$$
+    </div>
+    <div class="note">GRU has fewer parameters than LSTM (no cell state, no output gate). Often comparable performance. Preferred for smaller datasets.</div>
+  </section>
+
+  <section id="birnn">
+    <h2><span class="icon">↔️</span> Bidirectional RNN</h2>
+    <div class="eq-card"><div class="eq-label">Forward Pass</div>
+      $$\overrightarrow{\mathbf{h}}_t = f(\mathbf{W}_{xh}^\rightarrow\mathbf{x}_t + \mathbf{W}_{hh}^\rightarrow\overrightarrow{\mathbf{h}}_{t-1}+\mathbf{b}^\rightarrow)$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Backward Pass</div>
+      $$\overleftarrow{\mathbf{h}}_t = f(\mathbf{W}_{xh}^\leftarrow\mathbf{x}_t + \mathbf{W}_{hh}^\leftarrow\overleftarrow{\mathbf{h}}_{t+1}+\mathbf{b}^\leftarrow)$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Combined Output</div>
+      $$\mathbf{y}_t = \mathbf{W}_y[\overrightarrow{\mathbf{h}}_t;\overleftarrow{\mathbf{h}}_t] + \mathbf{b}_y$$
+      <div class="eq-desc">Concatenation of forward and backward hidden states. Context from both past and future tokens.</div>
+    </div>
+  </section>
+
+  <!-- Transformers -->
+  <div class="section-divider"><span class="tag">Transformers</span><hr></div>
+  <section id="attention">
+    <h2><span class="icon">🔆</span> Attention Mechanism &amp; KQV</h2>
+    <div class="eq-card"><div class="eq-label">Query, Key, Value Projections</div>
+      $$\mathbf{Q} = \mathbf{X}\mathbf{W}^Q,\quad \mathbf{K} = \mathbf{X}\mathbf{W}^K,\quad \mathbf{V} = \mathbf{X}\mathbf{W}^V$$
+      <div class="eq-desc">\(\mathbf{X}\in\mathbb{R}^{n\times d_{\text{model}}}\), \(\mathbf{W}^Q,\mathbf{W}^K\in\mathbb{R}^{d_{\text{model}}\times d_k}\), \(\mathbf{W}^V\in\mathbb{R}^{d_{\text{model}}\times d_v}\)</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Scaled Dot-Product Attention</div>
+      $$\text{Attention}(\mathbf{Q},\mathbf{K},\mathbf{V}) = \text{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^\top}{\sqrt{d_k}}\right)\mathbf{V}$$
+      <div class="eq-desc">Scaling by \(\sqrt{d_k}\) prevents softmax saturation in high dimensions.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Attention Weights</div>
+      $$\mathbf{A} = \text{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^\top}{\sqrt{d_k}}\right)\in\mathbb{R}^{n\times n}$$
+      $$A_{ij} = \frac{\exp(q_i^\top k_j/\sqrt{d_k})}{\sum_l\exp(q_i^\top k_l/\sqrt{d_k})}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Multi-Head Attention</div>
+      $$\text{head}_h = \text{Attention}(\mathbf{Q}\mathbf{W}_h^Q, \mathbf{K}\mathbf{W}_h^K, \mathbf{V}\mathbf{W}_h^V)$$
+      $$\text{MultiHead}(\mathbf{Q},\mathbf{K},\mathbf{V}) = \text{Concat}(\text{head}_1,\ldots,\text{head}_H)\mathbf{W}^O$$
+      <div class="eq-desc">\(H\) heads, each with \(d_k = d_{\text{model}}/H\). \(\mathbf{W}^O\in\mathbb{R}^{Hd_v\times d_{\text{model}}}\).</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Masked Attention (Decoder)</div>
+      $$\text{MaskedAttention}(\mathbf{Q},\mathbf{K},\mathbf{V}) = \text{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^\top + \mathbf{M}}{\sqrt{d_k}}\right)\mathbf{V}$$
+      $$M_{ij} = \begin{cases}0 & i\geq j\\ -\infty & i<j\end{cases}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Feed-Forward Sub-Layer</div>
+      $$\text{FFN}(\mathbf{x}) = \max(0,\;\mathbf{x}\mathbf{W}_1+\mathbf{b}_1)\mathbf{W}_2+\mathbf{b}_2$$
+      <div class="eq-desc">\(\mathbf{W}_1\in\mathbb{R}^{d_{\text{model}}\times d_{ff}}\), \(d_{ff}=4d_{\text{model}}\) typically</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Layer Normalisation</div>
+      $$\text{LayerNorm}(\mathbf{x}) = \frac{\mathbf{x}-\mu}{\sqrt{\sigma^2+\varepsilon}}\odot\boldsymbol{\gamma}+\boldsymbol{\beta}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Residual Connections</div>
+      $$\mathbf{x}' = \text{LayerNorm}(\mathbf{x} + \text{Sublayer}(\mathbf{x}))$$
+    </div>
+  </section>
+
+  <section id="posenc">
+    <h2><span class="icon">📍</span> Positional Encoding</h2>
+    <div class="eq-card"><div class="eq-label">Sinusoidal Positional Encoding (Vaswani et al.)</div>
+      $$PE_{(pos,2i)} = \sin\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)$$
+      $$PE_{(pos,2i+1)} = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)$$
+      <div class="eq-desc">\(pos\) = position in sequence, \(i\) = dimension index, \(d_{\text{model}}\) = embedding dimension.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Input with Positional Encoding</div>
+      $$\mathbf{X}' = \mathbf{X}_{\text{embed}} + \mathbf{PE}$$
+    </div>
+    <div class="note">Sinusoidal encoding enables the model to extrapolate to unseen sequence lengths and encodes relative position via dot products.</div>
+  </section>
+
+  <section id="seq2seq">
+    <h2><span class="icon">🔀</span> Sequence-to-Sequence with Transformers</h2>
+    <div class="eq-card"><div class="eq-label">Encoder Output</div>
+      $$\mathbf{H}_{\text{enc}} = \text{Encoder}(\mathbf{X}+\mathbf{PE})$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Decoder (Cross-Attention)</div>
+      $$\text{CrossAttention}(\mathbf{Q}_{\text{dec}},\mathbf{K}_{\text{enc}},\mathbf{V}_{\text{enc}}) = \text{softmax}\!\left(\frac{\mathbf{Q}_{\text{dec}}\mathbf{K}_{\text{enc}}^\top}{\sqrt{d_k}}\right)\mathbf{V}_{\text{enc}}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Output Probability</div>
+      $$P(y_t|\mathbf{y}_{<t},\mathbf{X}) = \text{softmax}(\mathbf{W}_{\text{out}}\mathbf{h}_t^{\text{dec}})$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Seq2Seq Training Loss (NLL)</div>
+      $$\mathcal{L} = -\sum_{t=1}^T\log P(y_t^*|\mathbf{y}_{<t}^*,\mathbf{X})$$
+    </div>
+  </section>
+
+  <!-- Kernels -->
+  <div class="section-divider"><span class="tag">Kernel Functions</span><hr></div>
+  <section id="kernels">
+    <h2><span class="icon">🌊</span> Kernel Functions</h2>
+    <div class="eq-grid">
+      <div class="eq-card"><div class="eq-label">Linear Kernel</div>$$K(\mathbf{x},\mathbf{x}') = \mathbf{x}^\top\mathbf{x}'$$</div>
+      <div class="eq-card"><div class="eq-label">Polynomial Kernel</div>$$K(\mathbf{x},\mathbf{x}') = (\mathbf{x}^\top\mathbf{x}'+c)^d, \quad c\geq 0,d\in\mathbb{Z}^+$$</div>
+      <div class="eq-card"><div class="eq-label">RBF / Gaussian Kernel</div>$$K(\mathbf{x},\mathbf{x}') = \exp\!\left(-\frac{\|\mathbf{x}-\mathbf{x}'\|^2}{2\sigma^2}\right) = \exp(-\gamma\|\mathbf{x}-\mathbf{x}'\|^2)$$<div class="eq-desc">\(\gamma = 1/(2\sigma^2)\). Most widely used kernel.</div></div>
+      <div class="eq-card"><div class="eq-label">Sigmoid Kernel</div>$$K(\mathbf{x},\mathbf{x}') = \tanh(\kappa\,\mathbf{x}^\top\mathbf{x}'+c)$$<div class="eq-desc">Valid kernel only for specific \(\kappa,c\). Related to neural network activations.</div></div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Mercer's Condition (valid kernel)</div>
+      <div class="eq-desc">A function \(K:\mathcal{X}\times\mathcal{X}\to\mathbb{R}\) is a valid kernel iff its Gram matrix \(\mathbf{K}_{ij}=K(\mathbf{x}^{(i)},\mathbf{x}^{(j)})\) is positive semi-definite for all datasets.</div>
+    </div>
+  </section>
+
+  <!-- Classification Metrics -->
+  <div class="section-divider"><span class="tag">Performance Metrics</span><hr></div>
+  <section id="classmetrics">
+    <h2><span class="icon">🎯</span> Classification Metrics</h2>
+    <h3>Confusion Matrix</h3>
+    <div class="eq-card">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;text-align:center;">
+        <tr>
+          <td colspan="2" rowspan="2" style="border:1px solid var(--border);padding:8px;color:var(--muted)">Confusion Matrix</td>
+          <td colspan="2" style="border:1px solid var(--border);padding:8px;color:var(--accent3);font-weight:600">Predicted</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid var(--border);padding:8px;color:var(--accent3)">Positive</td>
+          <td style="border:1px solid var(--border);padding:8px;color:var(--accent3)">Negative</td>
+        </tr>
+        <tr>
+          <td rowspan="2" style="border:1px solid var(--border);padding:8px;color:var(--accent5);font-weight:600">Actual</td>
+          <td style="border:1px solid var(--border);padding:8px;color:var(--accent5)">Positive</td>
+          <td style="border:1px solid var(--border);padding:8px;color:#7fc97f">TP</td>
+          <td style="border:1px solid var(--border);padding:8px;color:#ff6b6b">FN</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid var(--border);padding:8px;color:var(--accent5)">Negative</td>
+          <td style="border:1px solid var(--border);padding:8px;color:#ff6b6b">FP</td>
+          <td style="border:1px solid var(--border);padding:8px;color:#7fc97f">TN</td>
+        </tr>
+      </table>
+    </div>
+    <div class="eq-grid">
+      <div class="eq-card"><div class="eq-label">Accuracy</div>$$\text{Acc} = \frac{TP+TN}{TP+TN+FP+FN}$$</div>
+      <div class="eq-card"><div class="eq-label">Precision</div>$$P = \frac{TP}{TP+FP}$$</div>
+      <div class="eq-card"><div class="eq-label">Recall (Sensitivity)</div>$$R = \frac{TP}{TP+FN}$$</div>
+      <div class="eq-card"><div class="eq-label">Specificity</div>$$\text{Spec} = \frac{TN}{TN+FP}$$</div>
+      <div class="eq-card"><div class="eq-label">F1 Score</div>$$F_1 = 2\cdot\frac{P\cdot R}{P+R} = \frac{2TP}{2TP+FP+FN}$$</div>
+      <div class="eq-card"><div class="eq-label">F-Beta Score</div>$$F_\beta = (1+\beta^2)\cdot\frac{P\cdot R}{\beta^2 P+R}$$<div class="eq-desc">\(\beta>1\): weight recall; \(\beta<1\): weight precision</div></div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Matthews Correlation Coefficient</div>
+      $$\text{MCC} = \frac{TP\cdot TN - FP\cdot FN}{\sqrt{(TP+FP)(TP+FN)(TN+FP)(TN+FN)}}$$
+    </div>
+    <div class="eq-card"><div class="eq-label">ROC-AUC</div>
+      $$\text{AUC} = \int_0^1 \text{TPR}\,d(\text{FPR}) = P(\hat{s}_+ > \hat{s}_-)$$
+      <div class="eq-desc">TPR = TP/P (Recall), FPR = FP/N. AUC = 1 → perfect, 0.5 → random.</div>
+    </div>
+  </section>
+
+  <!-- Regression Metrics -->
+  <section id="regmetrics">
+    <h2><span class="icon">📏</span> Regression Metrics</h2>
+    <div class="eq-grid">
+      <div class="eq-card"><div class="eq-label">MAE</div>$$\text{MAE} = \frac{1}{n}\sum_{i=1}^n|y_i-\hat{y}_i|$$</div>
+      <div class="eq-card"><div class="eq-label">MSE</div>$$\text{MSE} = \frac{1}{n}\sum_{i=1}^n(y_i-\hat{y}_i)^2$$</div>
+      <div class="eq-card"><div class="eq-label">RMSE</div>$$\text{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^n(y_i-\hat{y}_i)^2}$$</div>
+      <div class="eq-card"><div class="eq-label">MAPE</div>$$\text{MAPE} = \frac{100}{n}\sum_{i=1}^n\left|\frac{y_i-\hat{y}_i}{y_i}\right|\%$$</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">R-Squared (Coefficient of Determination)</div>
+      $$R^2 = 1 - \frac{SS_{\text{res}}}{SS_{\text{tot}}} = 1 - \frac{\sum(y_i-\hat{y}_i)^2}{\sum(y_i-\bar{y})^2}$$
+      <div class="eq-desc">\(R^2=1\): perfect fit; \(R^2=0\): same as mean predictor; \(R^2<0\): worse than mean.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Adjusted R-Squared</div>
+      $$\bar{R}^2 = 1-(1-R^2)\frac{n-1}{n-p-1}$$
+      <div class="eq-desc">Penalises for adding unnecessary features. \(p\) = number of predictors, \(n\) = sample size.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Bias-Variance Decomposition</div>
+      $$\mathbb{E}[(y-\hat{y})^2] = \underbrace{\text{Bias}^2[\hat{y}]}_{\left(\mathbb{E}[\hat{y}]-y\right)^2} + \underbrace{\text{Var}[\hat{y}]}_{\mathbb{E}[(\hat{y}-\mathbb{E}[\hat{y}])^2]} + \underbrace{\sigma^2}_{\text{irreducible noise}}$$
+    </div>
+  </section>
+
+  <!-- Tree Criteria -->
+  <section id="treecriterion">
+    <h2><span class="icon">🌿</span> Tree Criteria: Entropy, Gini, Information Gain</h2>
+    <div class="eq-card"><div class="eq-label">Shannon Entropy</div>
+      $$H(S) = -\sum_{k=1}^K p_k\log_2 p_k, \quad p_k = \frac{|S_k|}{|S|}$$
+      <div class="eq-desc">Measures impurity/disorder. \(H=0\) → pure node; \(H=\log_2 K\) → maximally impure.</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Gini Impurity</div>
+      $$G(S) = 1-\sum_{k=1}^K p_k^2 = \sum_{k\neq k'} p_k p_{k'}$$
+      <div class="eq-desc">Probability that a random element would be incorrectly classified. Range \([0, 1-1/K]\).</div>
+    </div>
+    <div class="eq-card"><div class="eq-label">Information Gain</div>
+      $$IG(S,A) = H(S) - \sum_{v\in\text{vals}(A)}\frac{|S_v|}{|S|}H(S_v)$$
+    </div>
+    <div class="eq-card"><div class="eq-label">Gain Ratio (C4.5)</div>
+      $$\text{GR}(S,A) = \frac{IG(S,A)}{-\sum_v\frac{|S_v|}{|S|}\log_2\frac{|S_v|}{|S|}}$$
+    </div>
+  </section>
+
+  <div style="height:3rem"></div>
+</main>
+
+<script>
+const links = document.querySelectorAll('nav a');
+const sections = document.querySelectorAll('section[id]');
+function onScroll() {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) cur = s.id; });
+  links.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+  });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+</script>
+</body>
+</html>
